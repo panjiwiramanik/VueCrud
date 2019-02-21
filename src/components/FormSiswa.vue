@@ -3,6 +3,9 @@
     <b-form @submit="onSubmit" @reset="onReset">
       
       <b-row class="text-left">
+        <b-col md="12" sm="12" class="my-3">
+          <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+        </b-col>
         <b-col md="6" sm="12">
           <b-form-group id="Nis" label="NIS:" label-for="Nis">
             <b-form-input 
@@ -49,6 +52,8 @@
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
   import 'es6-promise/auto'
+  import vue2Dropzone from 'vue2-dropzone'
+  import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
   export default {
     data() {
@@ -63,7 +68,13 @@
           { value: 'pilih', text: '-- Pilih Jenis Kelamin --' },
           { value: 'Laki - Laki', text: 'Laki - Laki' },
           { value: 'Perempuan', text: 'Perempuan' }
-        ]
+        ],
+        dropzoneOptions: {
+          url: 'https://httpbin.org/post',
+          maxFilesize: 1,
+          maxFiles: 1,
+          headers: { "My-Awesome-Header": "header value" }
+        }
       }
     },
     methods: {
@@ -78,6 +89,9 @@
         this.form.jenis_kelamin = 'pilih'
         this.form.alamat = ''
       }
+    },
+    components: {
+      vueDropzone: vue2Dropzone
     }
   }
 </script>

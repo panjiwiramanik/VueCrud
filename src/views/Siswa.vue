@@ -5,7 +5,15 @@
     <br>
     <br>
     <h3 class="my-3">Data Siswa</h3>
-    <b-table responsive hover :items="siswa" />
+    <b-table responsive hover :items="siswa" :fields="siswaFields">
+		<template slot="index" slot-scope="data">
+			{{ data.index + 1 }}
+		</template>
+		<template slot="foto" slot-scope="data">
+			<b-img-lazy fluid v-bind="mainProps" :src="data.value" />
+		</template>
+    </b-table>
+    <p v-show="siswa < 1">Tidak Ada Data</p>
   </div>
 </template>
 
@@ -18,11 +26,14 @@
 	export default {
 		computed: {
 			siswa() {
-				return this.$store.state.siswa;
+				return this.$store.getters.siswa;
+			},
+			siswaFields() {
+				return this.$store.getters.siswaFields;
+			},
+			mainProps() {
+				return this.$store.getters.mainProps;
 			}
-		},
-		methods: {
-
 		},
 		components: {
 			FormSiswa
