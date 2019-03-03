@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3 class="my-3">Tambah Data Siswa</h3>
+    <h3 class="my-3"><span v-if="edits">Edit</span><span v-else>Tambah</span> Data Siswa</h3>
     <FormSiswa></FormSiswa>
     <br>
     <br>
@@ -11,6 +11,11 @@
 		</template>
 		<template slot="foto" slot-scope="data">
 			<b-img-lazy fluid v-bind="mainProps" :src="data.value" />
+		</template>
+		<template slot="id" slot-scope="data">
+			<b-button variant="warning" @click="edit(data.value)">Edit</b-button>
+			&nbsp;
+			<b-button variant="danger" @click="hapus(data.value)">Hapus</b-button>
 		</template>
     </b-table>
     <p v-show="siswa < 1">Tidak Ada Data</p>
@@ -25,6 +30,9 @@
 
 	export default {
 		computed: {
+			edits() {
+				return this.$store.state.edits;
+			},
 			siswa() {
 				return this.$store.getters.siswa;
 			},
@@ -33,6 +41,14 @@
 			},
 			mainProps() {
 				return this.$store.getters.mainProps;
+			}
+		},
+		methods: {
+			edit: function(value) {
+				this.$store.dispatch('detailDataSiswa', value)
+			},
+			hapus: function(value) {
+				this.$store.dispatch('deleteDataKelas', value)
 			}
 		},
 		components: {

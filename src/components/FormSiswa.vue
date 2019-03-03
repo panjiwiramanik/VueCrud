@@ -3,9 +3,6 @@
     <b-form @submit="onSubmit" @reset="onReset">
       
       <b-row class="text-left">
-        <b-col md="12" sm="12" class="my-3">
-          <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
-        </b-col>
         <b-col md="6" sm="12">
           <b-form-group id="Nis" label="NIS:" label-for="Nis">
             <b-form-input 
@@ -52,64 +49,40 @@
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
   import 'es6-promise/auto'
-  import vue2Dropzone from 'vue2-dropzone'
-  import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
   export default {
-    data() {
-      return {
-        form: {
-          nis: "",
-          nama_lengkap: "",
-          jenis_kelamin: "pilih",
-          alamat: ""
-        },
-        jk_options: [
-          { value: 'pilih', text: '-- Pilih Jenis Kelamin --' },
-          { value: 'Laki - Laki', text: 'Laki - Laki' },
-          { value: 'Perempuan', text: 'Perempuan' }
-        ],
-        dropzoneOptions: {
-          url: 'https://httpbin.org/post',
-          maxFilesize: 1,
-          maxFiles: 1,
-          headers: { "My-Awesome-Header": "header value" }
-        }
+    computed: {
+      jk_options() {
+        return this.$store.state.jk_options
+      },
+      form() {
+        return this.$store.state.form_siswa
       }
     },
     methods: {
       onSubmit(evt) {
         evt.preventDefault()
-        alert(JSON.stringify(this.form))
+        if (this.form.id != null) {
+          this.$store.dispatch('editDataSiswa', this.form)
+          .then(()=> {
+            this.form.id = ''
+            this.form.nis = ''
+            this.form.nama_lengkap = ''
+            this.form.jenis_kelamin = 'pilih'
+            this.form.alamat = ''
+          })
+        } else {
+          this.$store.dispatch('addDataSiswa', this.form)
+        }
       },
       onReset(evt) {
         evt.preventDefault()
+        this.form.id = ''
         this.form.nis = ''
         this.form.nama_lengkap = ''
         this.form.jenis_kelamin = 'pilih'
         this.form.alamat = ''
       }
-    },
-    components: {
-      vueDropzone: vue2Dropzone
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

@@ -35,21 +35,30 @@
 	import 'es6-promise/auto'
 
 	export default {
-		data() {
-			return {
-				form: {
-					nama_kelas: "",
-					jurusan: ""
-				}
+		computed: {
+			form() {
+				return this.$store.state.form_kelas
 			}
 		},
 		methods: {
 			onSubmit(evt) {
 				evt.preventDefault()
-				alert(JSON.stringify(this.form))
+				if (this.form.id != null) {
+					this.$store.dispatch('editDataKelas', this.form)
+					.then( () => {
+							this.form.id = ''
+							this.form.nama_kelas = ''
+							this.form.jurusan = ''
+						}
+					)
+				} else {
+					this.$store.dispatch('addDataKelas', this.form)
+				}
+
 			},
 			onReset(evt) {
 				evt.preventDefault()
+				this.form.id = ''
 				this.form.nama_kelas = ''
 				this.form.jurusan = ''
 			}
